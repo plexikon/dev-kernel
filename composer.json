@@ -17,7 +17,8 @@
         "ramsey/uuid": "^3.9",
         "react/promise": "^2.7",
         "plexikon/reporter": "dev-develop",
-        "plexikon/chronicle": "dev-develop"
+        "plexikon/chronicle": "dev-develop",
+        "ext-pcntl": "*"
     },
     "require-dev": {
         "nunomaduro/larastan": "^0.5.3",

@@ -27,6 +27,7 @@ use Plexikon\Kernel\Projection\Stream;
 use Plexikon\Kernel\Support\Console\CustomerReadModelProjection;
 use Plexikon\Kernel\Support\Console\CustomerSnapshotProjection;
 use Plexikon\Kernel\Support\Console\CustomersQueryProjection;
+use Plexikon\Kernel\Support\Console\SymfonyWorkerCommand;
 
 class CustomerServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -45,6 +46,11 @@ class CustomerServiceProvider extends ServiceProvider implements DeferrableProvi
         'get-customer-by-email' => GetCustomerByEmailHandler::class,
     ];
 
+    public const READ_MODEL_COMMANDS = [
+        'read_model-customer',
+        'snapshot-customer'
+    ];
+
     public array $bindings = [
         UniqueEmailAddress::class => UniqueEmailFromRead::class,
         CredentialEncoder::class => BcryptPasswordEncoder::class
@@ -53,7 +59,8 @@ class CustomerServiceProvider extends ServiceProvider implements DeferrableProvi
     protected array $consoleCommands = [
         CustomerReadModelProjection::class,
         CustomerSnapshotProjection::class,
-        CustomersQueryProjection::class
+        CustomersQueryProjection::class,
+        SymfonyWorkerCommand::class,
     ];
 
     public function register(): void
