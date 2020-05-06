@@ -27,8 +27,11 @@ final class CustomerPasswordChanged extends AggregateChanged
 
     public function newPassword(): BcryptEncodedPassword
     {
-        return $this->newPassword ?? BcryptEncodedPassword::fromString(
-                $this->payload['new_password']
-            );
+        return $this->newPassword ?? BcryptEncodedPassword::fromString($this->payload['new_password']);
+    }
+
+    public function oldPassword(): BcryptEncodedPassword
+    {
+        return $this->oldPassword ?? BcryptEncodedPassword::fromString($this->payload['old_password']);
     }
 }

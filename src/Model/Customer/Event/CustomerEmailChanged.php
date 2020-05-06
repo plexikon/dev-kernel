@@ -12,7 +12,9 @@ final class CustomerEmailChanged extends AggregateChanged
     private ?EmailAddress $newEmail;
     private ?EmailAddress $oldEmail;
 
-    public static function forCustomer(CustomerId $customerId, EmailAddress $newEmail, EmailAddress $oldEmail): self
+    public static function forCustomer(CustomerId $customerId,
+                                       EmailAddress $newEmail,
+                                       EmailAddress $oldEmail): self
     {
         $self = self::occur($customerId->toString(), [
             'new_email' => $newEmail->getValue(),
@@ -28,5 +30,10 @@ final class CustomerEmailChanged extends AggregateChanged
     public function newEmail(): EmailAddress
     {
         return $this->newEmail ?? EmailAddress::fromString($this->payload['new_email']);
+    }
+
+    public function oldEmail(): EmailAddress
+    {
+        return $this->oldEmail ?? EmailAddress::fromString($this->payload['old_email']);
     }
 }

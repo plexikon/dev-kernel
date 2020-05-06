@@ -96,7 +96,7 @@ class CustomerReadModelProjection extends Command
                     /** @var CustomerEnabled $event */
                     $event = $message->event();
                     $this->readModel()->stack('update', $event->aggregateRootId(), [
-                        'status' => $event->status()->getValue()
+                        'status' => $event->newStatus()->getValue()
                     ]);
                 },
 
@@ -105,7 +105,7 @@ class CustomerReadModelProjection extends Command
                     /** @var CustomerDisabled $event */
                     $event = $message->event();
                     $this->readModel()->stack('update', $event->aggregateRootId(), [
-                        'status' => $event->status()->getValue()
+                        'status' => $event->newStatus()->getValue()
                     ]);
                 },
         ];

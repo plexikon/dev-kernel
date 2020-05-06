@@ -9,21 +9,29 @@ use Plexikon\Kernel\Model\Customer\Value\CustomerStatus;
 
 final class CustomerDisabled extends AggregateChanged
 {
-    private ?CustomerStatus $status;
+    private ?CustomerStatus $newStatus;
+    private ?CustomerStatus $oldStatus;
 
-    public static function forCustomer(CustomerId $customerId, CustomerStatus $status): self
+    public static function forCustomer(CustomerId $customerId, CustomerStatus $newStatus, CustomerStatus $oldStatus): self
     {
         $self = self::occur($customerId->toString(), [
-            'status' => $status->getValue()
+            'new_status' => $newStatus->getValue(),
+            'old_status' => $oldStatus->getValue()
         ]);
 
-        $self->status = $status;
+        $self->newStatus = $newStatus;
+        $self->oldStatus = $oldStatus;
 
         return $self;
     }
 
-    public function status(): CustomerStatus
+    public function newStatus(): CustomerStatus
     {
-        return $this->status ?? CustomerStatus::byValue($this->payload['status']);
+        return $this->newStatus ?? CustomerStatus::byValue($this->payload['new_status']);
+    }
+
+    public function oldStatus(): CustomerStatus
+    {
+        return $this->oldStatus() ?? CustomerStatus::byValue($this->payload['old_status']);
     }
 }

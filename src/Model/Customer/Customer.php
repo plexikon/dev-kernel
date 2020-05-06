@@ -83,7 +83,7 @@ class Customer implements AggregateRoot
 
         $this->assertCustomerIsEnabled();
 
-        $this->recordThat(CustomerEnabled::forCustomer($this->customerId(), CustomerStatus::DISABLED()));
+        $this->recordThat(CustomerEnabled::forCustomer($this->customerId(), CustomerStatus::DISABLED(), $this->status));
     }
 
     public function markAsDisabled(): void
@@ -94,7 +94,7 @@ class Customer implements AggregateRoot
             return;
         }
 
-        $this->recordThat(CustomerEnabled::forCustomer($this->customerId(), $enabledStatus));
+        $this->recordThat(CustomerEnabled::forCustomer($this->customerId(), $enabledStatus, $this->status));
     }
 
     /**
@@ -162,11 +162,11 @@ class Customer implements AggregateRoot
 
     protected function applyCustomerEnabled(CustomerEnabled $event): void
     {
-        $this->status = $event->status();
+        $this->status = $event->newStatus();
     }
 
     protected function applyCustomerDisabled(CustomerDisabled $event): void
     {
-        $this->status = $event->status();
+        $this->status = $event->newStatus();
     }
 }
