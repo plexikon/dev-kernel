@@ -41,7 +41,7 @@ final class RegisterCustomerHandler
 
         $encodedPassword = $this->credentialEncoder->encode($command->clearPassword());
 
-        $customer = Customer::register($customerId, $email, $encodedPassword);
+        $customer = Customer::register($customerId, $email, $command->name(), $encodedPassword);
 
         $this->customerCollection->store($customer);
     }

@@ -18,6 +18,7 @@ final class CustomerReadModel extends ConnectionReadModel
         return function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->string('email')->unique();
+            $table->string('name');
             $table->string('password');
             $table->enum('status', CustomerStatus::getValues());
         };

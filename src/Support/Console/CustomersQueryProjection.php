@@ -8,11 +8,10 @@ use Plexikon\Chronicle\Support\Contracts\Projector\ProjectorManager;
 use Plexikon\Kernel\Model\Customer\Command\RegisterCustomer;
 use Plexikon\Reporter\Message\Message;
 
-final class CustomersQueryProjection extends Command
+class CustomersQueryProjection extends Command
 {
     protected $signature = 'kernel:query-customers';
-
-    private ProjectorManager $projectorManager;
+    protected ProjectorManager $projectorManager;
 
     public function __construct(ProjectorManager $projectorManager)
     {

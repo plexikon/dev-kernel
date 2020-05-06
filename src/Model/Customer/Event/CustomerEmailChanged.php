@@ -25,7 +25,7 @@ final class CustomerEmailChanged extends AggregateChanged
         return $self;
     }
 
-    public function getNewEmail(): EmailAddress
+    public function newEmail(): EmailAddress
     {
         return $this->newEmail ?? EmailAddress::fromString($this->payload['new_email']);
     }

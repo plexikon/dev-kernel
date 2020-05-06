@@ -8,6 +8,7 @@ use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
 use Plexikon\Kernel\Model\Customer\Value\CustomerId;
 use Plexikon\Kernel\Model\Customer\Value\CustomerStatus;
 use Plexikon\Kernel\Model\Customer\Value\EmailAddress;
+use Plexikon\Kernel\Model\Customer\Value\Name;
 use Plexikon\Kernel\Projection\Table;
 
 class CustomerModel extends Model
@@ -26,6 +27,11 @@ class CustomerModel extends Model
     public function getEmail(): EmailAddress
     {
         return EmailAddress::fromString($this['email']);
+    }
+
+    public function getCustomerName(): Name
+    {
+        return Name::fromString($this['name']);
     }
 
     public function getPassword(): BcryptEncodedPassword

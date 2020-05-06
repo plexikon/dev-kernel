@@ -9,6 +9,7 @@ use Plexikon\Chronicle\Support\Contracts\Aggregate\AggregateRoot;
 use Plexikon\Kernel\Model\Customer\Event\CustomerDisabled;
 use Plexikon\Kernel\Model\Customer\Event\CustomerEmailChanged;
 use Plexikon\Kernel\Model\Customer\Event\CustomerEnabled;
+use Plexikon\Kernel\Model\Customer\Event\CustomerNameChanged;
 use Plexikon\Kernel\Model\Customer\Event\CustomerPasswordChanged;
 use Plexikon\Kernel\Model\Customer\Event\CustomerRegistered;
 use Plexikon\Kernel\Model\Customer\Exception\CustomerNotEnabled;
@@ -16,21 +17,26 @@ use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
 use Plexikon\Kernel\Model\Customer\Value\CustomerId;
 use Plexikon\Kernel\Model\Customer\Value\CustomerStatus;
 use Plexikon\Kernel\Model\Customer\Value\EmailAddress;
+use Plexikon\Kernel\Model\Customer\Value\Name;
 
 class Customer implements AggregateRoot
 {
     use HasAggregateRoot;
 
     private ?EmailAddress $email;
+    private ?Name $name;
     private ?BcryptEncodedPassword $password;
     private CustomerStatus $status;
 
-    public static function register(CustomerId $customerId, EmailAddress $email, BcryptEncodedPassword $password): self
+    public static function register(CustomerId $customerId,
+                                    EmailAddress $email,
+                                    Name $name,
+                                    BcryptEncodedPassword $password): self
     {
         $self = new self($customerId);
 
         $self->recordThat(CustomerRegistered::withData(
-            $customerId, $email, $password, CustomerStatus::REGISTERED()
+            $customerId, $email, $name, $password, CustomerStatus::REGISTERED()
         ));
 
         return $self;
@@ -58,6 +64,15 @@ class Customer implements AggregateRoot
         $this->recordThat(CustomerPasswordChanged::forCustomer(
             $this->customerId(), $encodedPassword, $this->password)
         );
+    }
+
+    public function changeName(Name $newName): void
+    {
+        if($this->name->sameValueAs($newName)){
+            return;
+        }
+
+        $this->recordThat(CustomerNameChanged::forCustomer($this->customerId(), $newName, $this->name));
     }
 
     public function markAsEnabled(): void
@@ -95,6 +110,11 @@ class Customer implements AggregateRoot
         return $this->email;
     }
 
+    public function getName(): Name
+    {
+        return $this->name;
+    }
+
     public function getPassword(): BcryptEncodedPassword
     {
         return $this->password;
@@ -119,14 +139,20 @@ class Customer implements AggregateRoot
 
     protected function applyCustomerRegistered(CustomerRegistered $event): void
     {
-        $this->email = $event->getEmail();
-        $this->password = $event->getPassword();
-        $this->status = $event->getStatus();
+        $this->email = $event->email();
+        $this->password = $event->password();
+        $this->status = $event->status();
+        $this->name = $event->name();
     }
 
     protected function applyCustomerEmailChanged(CustomerEmailChanged $event): void
     {
-        $this->email = $event->getNewEmail();
+        $this->email = $event->newEmail();
+    }
+
+    protected function applyCustomerNameChanged(CustomerNameChanged $event): void
+    {
+        $this->name = $event->newName();
     }
 
     protected function applyCustomerPasswordChanged(CustomerPasswordChanged $event): void

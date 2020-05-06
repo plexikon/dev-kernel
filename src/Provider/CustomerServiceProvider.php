@@ -9,16 +9,17 @@ use Illuminate\Support\ServiceProvider;
 use Plexikon\Chronicle\Provider\ChronicleRepositoryManager;
 use Plexikon\Chronicle\Provider\ChronicleSnapshotManager;
 use Plexikon\Chronicle\Support\Contracts\Snapshot\SnapshotStore;
-use Plexikon\Chronicle\Test\TestDouble\Domain\RegisterUserHandler;
 use Plexikon\Kernel\Infrastructure\Service\BcryptPasswordEncoder;
 use Plexikon\Kernel\Infrastructure\Service\UniqueEmailFromRead;
 use Plexikon\Kernel\Model\Customer\Handler\CustomerChangeEmailHandler;
+use Plexikon\Kernel\Model\Customer\Handler\CustomerChangeNameHandler;
 use Plexikon\Kernel\Model\Customer\Handler\CustomerChangePasswordHandler;
 use Plexikon\Kernel\Model\Customer\Handler\GetCustomerByEmailHandler;
 use Plexikon\Kernel\Model\Customer\Handler\GetCustomerByIdHandler;
 use Plexikon\Kernel\Model\Customer\Handler\MarkCustomerAsDisabledHandler;
 use Plexikon\Kernel\Model\Customer\Handler\MarkCustomerAsEnabledHandler;
 use Plexikon\Kernel\Model\Customer\Handler\PaginateCustomersHandler;
+use Plexikon\Kernel\Model\Customer\Handler\RegisterCustomerHandler;
 use Plexikon\Kernel\Model\Customer\Repository\CustomerCollection;
 use Plexikon\Kernel\Model\Customer\Service\CredentialEncoder;
 use Plexikon\Kernel\Model\Customer\Service\UniqueEmailAddress;
@@ -30,10 +31,11 @@ use Plexikon\Kernel\Support\Console\CustomersQueryProjection;
 class CustomerServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     public const COMMAND_MAP = [
-        'register-user' => RegisterUserHandler::class,
+        'register-user' => RegisterCustomerHandler::class,
         'mark-customer-as-enabled' => MarkCustomerAsEnabledHandler::class,
         'mark-customer-as-disabled' => MarkCustomerAsDisabledHandler::class,
         'customer-change-email' => CustomerChangeEmailHandler::class,
+        'customer-change-name' => CustomerChangeNameHandler::class,
         'customer-change-password' => CustomerChangePasswordHandler::class,
     ];
 
@@ -48,7 +50,7 @@ class CustomerServiceProvider extends ServiceProvider implements DeferrableProvi
         CredentialEncoder::class => BcryptPasswordEncoder::class
     ];
 
-    protected array $customerCommands = [
+    protected array $consoleCommands = [
         CustomerReadModel::class,
         CustomerSnapshotProjection::class,
         CustomersQueryProjection::class
@@ -72,7 +74,7 @@ class CustomerServiceProvider extends ServiceProvider implements DeferrableProvi
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands($this->customerCommands);
+            $this->commands($this->consoleCommands);
         }
     }
 

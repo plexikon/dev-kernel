@@ -21,7 +21,8 @@ class CustomerSnapshotProjection extends Command
 
     protected function createCustomerStreamProjection(): SnapshotStreamProjection
     {
-        return $this->getLaravel()->get(SnapshotModelProjectionManager::class)
+        return $this->getLaravel()
+            ->get(SnapshotModelProjectionManager::class)
             ->createSnapshotProjection('user-stream', [Customer::class]);
     }
 }
