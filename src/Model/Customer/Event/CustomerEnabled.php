@@ -20,6 +20,7 @@ final class CustomerEnabled extends AggregateChanged
         ]);
 
         $self->newStatus = $newStatus;
+        $self->oldStatus = $newStatus;
 
         return $self;
     }

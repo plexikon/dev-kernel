@@ -8,6 +8,7 @@ use Plexikon\Kernel\Model\Customer\Exception\BadCredentials;
 use Plexikon\Kernel\Model\Customer\Exception\CustomerNotFound;
 use Plexikon\Kernel\Model\Customer\Repository\CustomerCollection;
 use Plexikon\Kernel\Model\Customer\Service\CredentialEncoder;
+use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
 
 final class CustomerChangePasswordHandler
 {
@@ -28,14 +29,19 @@ final class CustomerChangePasswordHandler
             throw CustomerNotFound::withId($customerId);
         }
 
-        if (!$this->credentialEncoder->check($command->currentClearPassword(), $customer->getPassword())) {
-            throw new BadCredentials('Invalid password');
-        }
-
-        $encodedPassword = $this->credentialEncoder->encode($command->newClearPasswordConfirmation());
+        $encodedPassword = $this->encodeValidatedPassword($command, $customer->getPassword());
 
         $customer->changePassword($encodedPassword);
 
         $this->customerCollection->store($customer);
+    }
+
+    private function encodeValidatedPassword(CustomerChangePassword $command, BcryptEncodedPassword $password): BcryptEncodedPassword
+    {
+        if (!$this->credentialEncoder->check($command->currentClearPassword(), $password)) {
+            throw new BadCredentials('Invalid password');
+        }
+
+        return $this->credentialEncoder->encode($command->newClearPasswordConfirmation());
     }
 }

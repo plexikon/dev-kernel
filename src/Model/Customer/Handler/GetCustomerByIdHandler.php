@@ -16,7 +16,7 @@ final class GetCustomerByIdHandler
         $this->model = $model;
     }
 
-    public function __invoke(GetCustomerById $query, Deferred $promise): void
+    public function query(GetCustomerById $query, Deferred $promise): void
     {
         $customers = $this->model->newQuery()->find($query->getCustomerId()->getValue());
 

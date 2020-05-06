@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace Plexikon\Kernel\Infrastructure\Service;
 
 use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Hashing\BcryptHasher;
+use Plexikon\Kernel\Exception\InvalidArgumentException;
 use Plexikon\Kernel\Model\Customer\Service\CredentialEncoder;
 use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
 use Plexikon\Kernel\Model\Customer\Value\ClearPassword;
 use Plexikon\Kernel\Model\Customer\Value\ClearPasswordConfirmation;
+use function get_class;
 
 final class BcryptPasswordEncoder implements CredentialEncoder
 {
@@ -15,6 +18,12 @@ final class BcryptPasswordEncoder implements CredentialEncoder
 
     public function __construct(Hasher $encoder)
     {
+        if (!$encoder instanceof BcryptHasher) {
+            $message = 'Hasher must be an instance of ' . (BcryptHasher::class) . ' got: ' . get_class($encoder);
+
+            throw new InvalidArgumentException($message);
+        }
+
         $this->encoder = $encoder;
     }
 

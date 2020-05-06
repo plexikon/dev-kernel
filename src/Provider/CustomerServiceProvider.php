@@ -23,8 +23,8 @@ use Plexikon\Kernel\Model\Customer\Handler\RegisterCustomerHandler;
 use Plexikon\Kernel\Model\Customer\Repository\CustomerCollection;
 use Plexikon\Kernel\Model\Customer\Service\CredentialEncoder;
 use Plexikon\Kernel\Model\Customer\Service\UniqueEmailAddress;
-use Plexikon\Kernel\Projection\Customer\CustomerReadModel;
 use Plexikon\Kernel\Projection\Stream;
+use Plexikon\Kernel\Support\Console\CustomerReadModelProjection;
 use Plexikon\Kernel\Support\Console\CustomerSnapshotProjection;
 use Plexikon\Kernel\Support\Console\CustomersQueryProjection;
 
@@ -51,7 +51,7 @@ class CustomerServiceProvider extends ServiceProvider implements DeferrableProvi
     ];
 
     protected array $consoleCommands = [
-        CustomerReadModel::class,
+        CustomerReadModelProjection::class,
         CustomerSnapshotProjection::class,
         CustomersQueryProjection::class
     ];

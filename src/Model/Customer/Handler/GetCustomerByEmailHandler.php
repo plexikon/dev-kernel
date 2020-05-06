@@ -16,7 +16,7 @@ final class GetCustomerByEmailHandler
         $this->model = $model;
     }
 
-    public function __invoke(GetCustomerByEmail $query, Deferred $promise): void
+    public function query(GetCustomerByEmail $query, Deferred $promise): void
     {
         $customers = $this->model->newQuery()->paginate($query->getEmail()->getValue());
 

@@ -20,7 +20,7 @@ final class MarkCustomerAsDisabledHandler
     {
         $customerId = $command->customerId();
 
-        if(!$customer = $this->customerCollection->get($customerId)){
+        if (!$customer = $this->customerCollection->get($customerId)) {
             throw CustomerNotFound::withId($customerId);
         }
 

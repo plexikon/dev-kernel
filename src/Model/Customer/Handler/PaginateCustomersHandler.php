@@ -16,7 +16,7 @@ final class PaginateCustomersHandler
         $this->model = $model;
     }
 
-    public function __invoke(PaginateCustomers $query, Deferred $promise): void
+    public function query(PaginateCustomers $query, Deferred $promise): void
     {
         $customers = $this->model->newQuery()->paginate($query->getLimit());
 
