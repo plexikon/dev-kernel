@@ -32,10 +32,7 @@ class SymfonyWorkerCommand extends Command
         pcntl_async_signals(true);
 
         foreach ($this->readModels as $streamName => $command) {
-            $this->processes->put(
-                $streamName,
-                Process::fromShellCommandline("php artisan kernel:$command", null, null, null, 0)
-            );
+            $this->add($streamName, $command);
         }
 
         $this->start();
@@ -112,9 +109,8 @@ class SymfonyWorkerCommand extends Command
 
         $this->processes->each(
             function (Process $process, string $streamName) use (&$display): void {
-                $running = $process->isRunning() ? 'Running' : 'Stopped';
                 $display += [$streamName => [
-                    'status' => $running,
+                    'status' => $process->isRunning() ? 'Running' : 'Stopped',
                     'pid' => $process->getPid()
                 ]];
             }
