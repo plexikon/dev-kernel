@@ -29,4 +29,9 @@ final class ChronicleCustomerRepository implements CustomerCollection
     {
         $this->aggregateRepository->persist($customer);
     }
+
+    public function getAggregateRepository(): AggregateRepository
+    {
+        return $this->aggregateRepository;
+    }
 }

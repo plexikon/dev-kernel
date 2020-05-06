@@ -22,6 +22,6 @@ final class UniqueEmailFromRead implements UniqueEmailAddress
         /** @var CustomerModel $customer */
         $customer = $this->model->newQuery()->where('email', $email->getValue())->first();
 
-       return  $customer ? $customer->getId() : null;
+       return $customer ? $customer->getId() : null;
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Plexikon\Chronicle\Provider\ChronicleRepositoryManager;
 use Plexikon\Kernel\Infrastructure\Service\BcryptPasswordEncoder;
+use Plexikon\Kernel\Infrastructure\Service\UniqueEmailFromRead;
 use Plexikon\Kernel\Model\Customer\Repository\CustomerCollection;
 use Plexikon\Kernel\Model\Customer\Service\CredentialEncoder;
 use Plexikon\Kernel\Model\Customer\Service\UniqueEmailAddress;
@@ -16,7 +17,7 @@ use Plexikon\Kernel\Projection\Stream;
 class CustomerServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     public array $bindings = [
-        UniqueEmailAddress::class => '',
+        UniqueEmailAddress::class => UniqueEmailFromRead::class,
         CredentialEncoder::class => BcryptPasswordEncoder::class
     ];
 

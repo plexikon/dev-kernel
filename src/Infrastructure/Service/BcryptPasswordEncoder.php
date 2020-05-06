@@ -5,9 +5,9 @@ namespace Plexikon\Kernel\Infrastructure\Service;
 
 use Illuminate\Contracts\Hashing\Hasher;
 use Plexikon\Kernel\Model\Customer\Service\CredentialEncoder;
+use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
 use Plexikon\Kernel\Model\Customer\Value\ClearPassword;
 use Plexikon\Kernel\Model\Customer\Value\ClearPasswordConfirmation;
-use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
 
 final class BcryptPasswordEncoder implements CredentialEncoder
 {
@@ -21,8 +21,7 @@ final class BcryptPasswordEncoder implements CredentialEncoder
     public function encode(ClearPasswordConfirmation $passwordConfirmation): BcryptEncodedPassword
     {
         return BcryptEncodedPassword::fromString(
-            $this->encoder->make($passwordConfirmation->getValue()),
-            PASSWORD_BCRYPT
+            $this->encoder->make($passwordConfirmation->getValue())
         );
     }
 

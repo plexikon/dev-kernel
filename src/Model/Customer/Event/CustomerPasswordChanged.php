@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Plexikon\Kernel\Model\Customer\Event;
 
 use Plexikon\Chronicle\Aggregate\AggregateChanged;
-use Plexikon\Kernel\Model\Customer\Value\CustomerId;
 use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
+use Plexikon\Kernel\Model\Customer\Value\CustomerId;
 
 final class CustomerPasswordChanged extends AggregateChanged
 {

@@ -6,7 +6,9 @@ namespace Plexikon\Kernel\Support\Console;
 use Illuminate\Console\Command;
 use Plexikon\Chronicle\Support\Contracts\Projector\ProjectorManager;
 use Plexikon\Chronicle\Support\Contracts\Projector\ReadModel;
+use Plexikon\Kernel\Model\Customer\Event\CustomerDisabled;
 use Plexikon\Kernel\Model\Customer\Event\CustomerEmailChanged;
+use Plexikon\Kernel\Model\Customer\Event\CustomerEnabled;
 use Plexikon\Kernel\Model\Customer\Event\CustomerPasswordChanged;
 use Plexikon\Kernel\Model\Customer\Event\CustomerRegistered;
 use Plexikon\Kernel\Projection\Customer\CustomerReadModel;
@@ -15,7 +17,6 @@ use Plexikon\Reporter\Message\Message;
 
 /**
  * @method ReadModel readModel()
- * @package Plexikon\Kernel\Support\Console
  */
 final class CustomerReadModelProjection extends Command
 {
@@ -38,10 +39,10 @@ final class CustomerReadModelProjection extends Command
 
         $projection
             ->withQueryFilter($this->projectorManager->projectionQueryFilter())
-            ->initialize(['customer_count' => 0])
+            ->initialize(['registered' => 0])
             ->when(
                 [
-                    'register-customer' =>
+                    'customer-registered' =>
                         function (array $state, Message $message): array {
                             /** @var CustomerRegistered $event */
                             $event = $message->event();
@@ -49,10 +50,11 @@ final class CustomerReadModelProjection extends Command
                             $this->readModel()->stack('insert', [
                                 'id' => $event->aggregateRootId(),
                                 'email' => $event->getEmail()->getValue(),
-                                'password' => $event->getPassword()->getValue()
+                                'password' => $event->getPassword()->getValue(),
+                                'status' => $event->getStatus()->getValue()
                             ]);
 
-                            $state['count']++;
+                            $state['registered']++;
                             return $state;
                         },
 
@@ -73,7 +75,25 @@ final class CustomerReadModelProjection extends Command
                             $this->readModel()->stack('update', $event->aggregateRootId(), [
                                 'password' => $event->newPassword()->getValue()
                             ]);
-                        }
+                        },
+
+                    'customer-enabled' =>
+                        function (array $state, Message $message): void {
+                            /** @var CustomerEnabled $event */
+                            $event = $message->event();
+                            $this->readModel()->stack('update', $event->aggregateRootId(), [
+                                'status' => $event->status()->getValue()
+                            ]);
+                        },
+
+                    'customer-disabled' =>
+                        function (array $state, Message $message): void {
+                            /** @var CustomerDisabled $event */
+                            $event = $message->event();
+                            $this->readModel()->stack('update', $event->aggregateRootId(), [
+                                'status' => $event->status()->getValue()
+                            ]);
+                        },
                 ])
             ->run(true);
     }
