@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Plexikon\Chronicle\Provider\SnapshotModelProjectionManager;
 use Plexikon\Chronicle\Support\Snapshot\SnapshotStreamProjection;
 use Plexikon\Kernel\Model\Customer\Customer;
+use Plexikon\Kernel\Projection\Stream;
 
 class CustomerSnapshotProjection extends Command
 {
@@ -23,6 +24,6 @@ class CustomerSnapshotProjection extends Command
     {
         return $this->getLaravel()
             ->get(SnapshotModelProjectionManager::class)
-            ->createSnapshotProjection('user-stream', [Customer::class]);
+            ->createSnapshotProjection(Stream::CUSTOMER, [Customer::class]);
     }
 }
