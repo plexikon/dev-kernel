@@ -39,7 +39,7 @@ final class RegisterCustomerHandler
             throw CustomerAlreadyExists::withEmail($email);
         }
 
-        $encodedPassword = ($this->credentialEncoder)($command->clearPassword());
+        $encodedPassword = $this->credentialEncoder->encode($command->clearPassword());
 
         $customer = Customer::register($customerId, $email, $encodedPassword);
 

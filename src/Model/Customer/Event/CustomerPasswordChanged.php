@@ -5,19 +5,18 @@ namespace Plexikon\Kernel\Model\Customer\Event;
 
 use Plexikon\Chronicle\Aggregate\AggregateChanged;
 use Plexikon\Kernel\Model\Customer\Value\CustomerId;
-use Plexikon\Kernel\Model\Customer\Value\EncodedPassword;
+use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
 
 final class CustomerPasswordChanged extends AggregateChanged
 {
-    private ?EncodedPassword $newPassword;
-    private ?EncodedPassword $oldPassword;
+    private ?BcryptEncodedPassword $newPassword;
+    private ?BcryptEncodedPassword $oldPassword;
 
-    public static function forCustomer(CustomerId $customerId, EncodedPassword $newPassword, EncodedPassword $oldPassword): self
+    public static function forCustomer(CustomerId $customerId, BcryptEncodedPassword $newPassword, BcryptEncodedPassword $oldPassword): self
     {
         $self = self::occur($customerId->toString(), [
             'new_password' => $newPassword->getValue(),
             'old_password' => $oldPassword->getValue(),
-            'password_hash' => $newPassword->getHash()
         ]);
 
         $self->newPassword = $newPassword;
@@ -26,11 +25,10 @@ final class CustomerPasswordChanged extends AggregateChanged
         return $self;
     }
 
-    public function newPassword(): EncodedPassword
+    public function newPassword(): BcryptEncodedPassword
     {
-        return $this->newPassword ?? EncodedPassword::fromString(
-                $this->payload['new_password'],
-                $this->payload['password_hash']
+        return $this->newPassword ?? BcryptEncodedPassword::fromString(
+                $this->payload['new_password']
             );
     }
 }

@@ -11,16 +11,16 @@ use Plexikon\Kernel\Model\Customer\Event\CustomerPasswordChanged;
 use Plexikon\Kernel\Model\Customer\Event\CustomerRegistered;
 use Plexikon\Kernel\Model\Customer\Value\CustomerId;
 use Plexikon\Kernel\Model\Customer\Value\EmailAddress;
-use Plexikon\Kernel\Model\Customer\Value\EncodedPassword;
+use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
 
 class Customer implements AggregateRoot
 {
     use HasAggregateRoot;
 
     private ?EmailAddress $email;
-    private ?EncodedPassword $password;
+    private ?BcryptEncodedPassword $password;
 
-    public static function register(CustomerId $customerId, EmailAddress $email, EncodedPassword $password): self
+    public static function register(CustomerId $customerId, EmailAddress $email, BcryptEncodedPassword $password): self
     {
         $self = new self($customerId);
 
@@ -38,7 +38,7 @@ class Customer implements AggregateRoot
        $this->recordThat(CustomerEmailChanged::forCustomer($this->customerId(), $newEmail, $this->email));
     }
 
-    public function changePassword(EncodedPassword $encodedPassword): void
+    public function changePassword(BcryptEncodedPassword $encodedPassword): void
     {
         if($this->password->sameValueAs($encodedPassword)){
             return;
@@ -60,7 +60,7 @@ class Customer implements AggregateRoot
         return $this->email;
     }
 
-    public function getPassword(): EncodedPassword
+    public function getPassword(): BcryptEncodedPassword
     {
         return $this->password;
     }
