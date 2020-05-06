@@ -32,7 +32,10 @@ class SymfonyWorkerCommand extends Command
         pcntl_async_signals(true);
 
         foreach ($this->readModels as $streamName => $command) {
-            $this->add($streamName, $command);
+            $this->processes->put(
+                $streamName,
+                Process::fromShellCommandline("php artisan kernel:$command", null, null, null, 0)
+            );
         }
 
         $this->start();
@@ -82,19 +85,11 @@ class SymfonyWorkerCommand extends Command
 
     protected function displayInfo(): void
     {
-        foreach ($this->isRunning() as $streamName => $info) {
+        foreach ($this->displayWhileRunning() as $streamName => $info) {
             $this->line("Stream $streamName - status " . $info['status'] . ' (Pid:' . $info['pid'] . ')');
         }
 
         $this->line('<----------------->');
-    }
-
-    protected function add(string $streamName, string $command): void
-    {
-        $this->processes->put(
-            $streamName,
-            Process::fromShellCommandline("php artisan kernel:$command", null, null, null, 0)
-        );
     }
 
     protected function start(): void
@@ -111,7 +106,7 @@ class SymfonyWorkerCommand extends Command
         });
     }
 
-    protected function isRunning(): array
+    protected function displayWhileRunning(): array
     {
         $display = [];
 
