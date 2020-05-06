@@ -21,7 +21,7 @@ use Plexikon\Reporter\Message\Message;
  */
 class CustomerReadModelProjection extends Command
 {
-    protected $signature = 'kernel:read_model_customer';
+    protected $signature = 'kernel:read_model-customer';
     protected ProjectorManager $projectorManager;
     protected CustomerReadModel $readModel;
 
