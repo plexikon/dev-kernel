@@ -15,7 +15,8 @@ final class AccountNameChanged extends AggregateChanged
     public static function forCustomer(AccountId $accountId, Name $newName, Name $oldName)
     {
         $self = self::occur($accountId->getValue(),[
-            'new_name' => $newName
+            'new_name' => $newName->getValue(),
+            'old_name' => $oldName->getValue()
         ]);
 
         $self->newName = $newName;
@@ -26,11 +27,11 @@ final class AccountNameChanged extends AggregateChanged
 
     public function newName(): Name
     {
-        return Name::fromString($this->payload['new_name']);
+        return $this->newName ?? Name::fromString($this->payload['new_name']);
     }
 
     public function oldName(): Name
     {
-        return Name::fromString($this->payload['old_name']);
+        return $this->oldName ?? Name::fromString($this->payload['old_name']);
     }
 }

@@ -77,24 +77,22 @@ class Account implements AggregateRoot
 
     public function markAsEnabled(): void
     {
-        if ($this->status->sameValueAs(AccountStatus::DISABLED())) {
+        if ($this->status->sameValueAs(AccountStatus::ENABLED())) {
             return;
         }
 
-        $this->assertCustomerIsEnabled();
-
-        $this->recordThat(AccountEnabled::forCustomer($this->accountId(), AccountStatus::DISABLED(), $this->status));
+        $this->recordThat(AccountEnabled::forCustomer($this->accountId(), AccountStatus::ENABLED(), $this->status));
     }
 
     public function markAsDisabled(): void
     {
-        $enabledStatus = AccountStatus::ENABLED();
+        $disabledStatus = AccountStatus::DISABLED();
 
-        if ($this->status->sameValueAs($enabledStatus)) {
+        if ($this->status->sameValueAs($disabledStatus)) {
             return;
         }
 
-        $this->recordThat(AccountEnabled::forCustomer($this->accountId(), $enabledStatus, $this->status));
+        $this->recordThat(AccountEnabled::forCustomer($this->accountId(), AccountStatus::ENABLED(), $this->status));
     }
 
     /**

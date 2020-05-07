@@ -16,7 +16,7 @@ final class AccountChangePassword extends Command
                                     string $newPasswordConfirmation): self
     {
         return new self([
-            'account_id' > $accountId,
+            'account_id' => $accountId,
             'current_password' => $currentPassword,
             'new_password' => $newPassword,
             'new_password_confirmation' => $newPasswordConfirmation,

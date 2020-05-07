@@ -6,6 +6,7 @@ namespace Plexikon\Kernel\Support\Console;
 use Illuminate\Console\Command;
 use Plexikon\Chronicle\Support\Contracts\Projector\ProjectorManager;
 use Plexikon\Kernel\Model\Account\Command\RegisterAccount;
+use Plexikon\Kernel\Projection\Stream;
 use Plexikon\Reporter\Message\Message;
 
 class AccountsQueryProjection extends Command
@@ -25,7 +26,8 @@ class AccountsQueryProjection extends Command
         $projection = $this->projectorManager->createQuery();
         $projection
             ->withQueryFilter($this->projectorManager->projectionQueryFilter())
-            ->initialize(['registered' => 0])
+            ->initialize(fn() => ['registered' => 0])
+            ->fromStreams(Stream::ACCOUNT)
             ->whenAny(function (array $state, Message $message): array {
                 $event = $message->event();
 

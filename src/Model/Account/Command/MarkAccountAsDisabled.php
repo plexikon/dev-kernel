@@ -8,7 +8,7 @@ use Plexikon\Reporter\Command;
 
 final class MarkAccountAsDisabled extends Command
 {
-    public function withData(string $accountId): self
+    public static function withData(string $accountId): self
     {
         return new self(['account_id' => $accountId]);
     }

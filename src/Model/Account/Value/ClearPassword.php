@@ -12,8 +12,8 @@ class ClearPassword extends Password
 
     public static function fromString(string $password): self
     {
-        Assertion::betweenLength(self::MIN_LENGTH, self::MAX_LENGTH, 'Invalid password');
+        Assertion::betweenLength($password, self::MIN_LENGTH, self::MAX_LENGTH, 'Invalid password');
 
-        return new self($password);
+        return new static($password);
     }
 }

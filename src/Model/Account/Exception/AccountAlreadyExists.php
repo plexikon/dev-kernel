@@ -10,11 +10,11 @@ class AccountAlreadyExists extends AccountException
 {
     public static function withId(AccountId $accountId): self
     {
-        return new self("Account with id {$accountId->toString()} not found");
+        return new self("Account with id {$accountId->toString()} already exists");
     }
 
     public static function withEmail(EmailAddress $email): self
     {
-        return new self("Account with email {$email->getValue()} not found");
+        return new self("Account with email {$email->getValue()} already exists");
     }
 }

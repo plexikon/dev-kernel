@@ -22,7 +22,7 @@ final class ChronicleAccountRepository implements AccountCollection
         /** @var Account $account */
         $account = $this->aggregateRepository->retrieve($accountId);
 
-        return $account;
+        return $account->exists() ? $account : null;
     }
 
     public function store(Account $customer): void

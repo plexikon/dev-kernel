@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use Plexikon\Chronicle\Provider\ChronicleRepositoryManager;
 use Plexikon\Chronicle\Provider\ChronicleSnapshotManager;
 use Plexikon\Chronicle\Support\Contracts\Snapshot\SnapshotStore;
+use Plexikon\Kernel\Infrastructure\Repository\Customer\ChronicleAccountRepository;
 use Plexikon\Kernel\Infrastructure\Service\BcryptPasswordEncoder;
 use Plexikon\Kernel\Infrastructure\Service\UniqueEmailFromRead;
 use Plexikon\Kernel\Model\Account\Handler\AccountChangeEmailHandler;
@@ -47,8 +48,8 @@ class AccountServiceProvider extends ServiceProvider implements DeferrableProvid
     ];
 
     public const READ_MODEL_COMMANDS = [
-        'read_model-account',
-        'snapshot-account'
+        'account-stream' => 'read_model-account',
+        'account-stream-snapshots' => 'snapshot-account'
     ];
 
     public array $bindings = [
@@ -66,9 +67,11 @@ class AccountServiceProvider extends ServiceProvider implements DeferrableProvid
     public function register(): void
     {
         $this->app->bindIf(AccountCollection::class, function (Application $app): AccountCollection {
-            return $app
+            $aggregateRepository = $app
                 ->get(ChronicleRepositoryManager::class)
                 ->createRepository(Stream::ACCOUNT);
+
+            return new ChronicleAccountRepository($aggregateRepository);
         }, true);
 
         $this->app->bindIf(SnapshotStore::class, function (Application $app): SnapshotStore {

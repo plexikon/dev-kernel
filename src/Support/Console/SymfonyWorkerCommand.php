@@ -7,16 +7,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Plexikon\Chronicle\Support\Contracts\Projector\ProjectorManager;
 use Plexikon\Chronicle\Support\Projector\ProjectionStatus;
-use Plexikon\Kernel\Provider\AccountServiceProvider;
 use Symfony\Component\Process\Process;
 
 class SymfonyWorkerCommand extends Command
 {
-    protected array $readModels = [
-        ...AccountServiceProvider::READ_MODEL_COMMANDS
-    ];
+    protected array $readModels = [];
 
-    protected $signature = 'app:read-models';
+    protected $signature = 'kernel:read-models';
     protected ProjectorManager $projectorManager;
     protected Collection $processes;
 
@@ -32,7 +29,10 @@ class SymfonyWorkerCommand extends Command
         pcntl_async_signals(true);
 
         foreach ($this->readModels as $streamName => $command) {
-            $this->add($streamName, $command);
+            $this->processes->put(
+                $streamName,
+                Process::fromShellCommandline("php artisan app:$command", null, null, null, 0)
+            );
         }
 
         $this->start();
@@ -98,7 +98,7 @@ class SymfonyWorkerCommand extends Command
 
     protected function stop(): void
     {
-        $this->processes->each(function(Process $process, string $streamName){
+        $this->processes->each(function (Process $process, string $streamName) {
             $process->stop(0);
         });
     }

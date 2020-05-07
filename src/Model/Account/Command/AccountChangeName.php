@@ -9,7 +9,7 @@ use Plexikon\Reporter\Command;
 
 final class AccountChangeName extends Command
 {
-    public function withData(string $accountId, string $newName)
+    public static function withData(string $accountId, string $newName)
     {
         return new self([
             'account_id' => $accountId,
@@ -24,6 +24,6 @@ final class AccountChangeName extends Command
 
     public function newName(): Name
     {
-        return Name::fromString($this->payload['name']);
+        return Name::fromString($this->payload[' new_name']);
     }
 }

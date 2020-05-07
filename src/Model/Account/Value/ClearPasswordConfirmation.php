@@ -11,6 +11,6 @@ final class ClearPasswordConfirmation extends ClearPassword
     {
         Assertion::same($password, $passwordConfirmation, 'Invalid password');
 
-        return self::fromString($password);
+        return static::fromString($password);
     }
 }

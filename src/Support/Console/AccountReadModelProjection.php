@@ -21,7 +21,7 @@ use Plexikon\Reporter\Message\Message;
  */
 class AccountReadModelProjection extends Command
 {
-    protected $signature = 'kernel:read_model-customer';
+    protected $signature = 'kernel:read_model-account';
     protected ProjectorManager $projectorManager;
     protected AccountReadModel $readModel;
 
@@ -39,7 +39,8 @@ class AccountReadModelProjection extends Command
 
         $projection
             ->withQueryFilter($this->projectorManager->projectionQueryFilter())
-            ->initialize(['registered' => 0])
+            ->initialize(fn() => ['registered' => 0])
+            ->fromStreams(Stream::ACCOUNT)
             ->when($this->getAccountHandlers())
             ->run(true);
     }
@@ -78,7 +79,7 @@ class AccountReadModelProjection extends Command
                 /** @var AccountNameChanged $event */
                 $event = $message->event();
                 $this->readModel()->stack('update', $event->aggregateRootId(), [
-                    'status' => $event->newName()->getValue()
+                    'name' => $event->newName()->getValue()
                 ]);
             },
 
