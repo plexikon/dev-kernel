@@ -7,13 +7,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Plexikon\Chronicle\Support\Contracts\Projector\ProjectorManager;
 use Plexikon\Chronicle\Support\Projector\ProjectionStatus;
-use Plexikon\Kernel\Provider\CustomerServiceProvider;
+use Plexikon\Kernel\Provider\AccountServiceProvider;
 use Symfony\Component\Process\Process;
 
 class SymfonyWorkerCommand extends Command
 {
     protected array $readModels = [
-        ...CustomerServiceProvider::READ_MODEL_COMMANDS
+        ...AccountServiceProvider::READ_MODEL_COMMANDS
     ];
 
     protected $signature = 'app:read-models';

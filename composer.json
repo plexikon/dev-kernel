@@ -56,9 +56,7 @@
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "Plexikon\\Kernel\\Provider\\CustomerServiceProvider"
-            ]
+            "providers": []
         }
     }
 }

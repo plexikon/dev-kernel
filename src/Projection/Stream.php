@@ -4,5 +4,5 @@ namespace Plexikon\Kernel\Projection;
 
 interface Stream
 {
-    public const CUSTOMER = 'customer-stream';
+    public const ACCOUNT = 'account-stream';
 }

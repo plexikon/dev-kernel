@@ -6,10 +6,10 @@ namespace Plexikon\Kernel\Infrastructure\Service;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Hashing\BcryptHasher;
 use Plexikon\Kernel\Exception\InvalidArgumentException;
-use Plexikon\Kernel\Model\Customer\Service\CredentialEncoder;
-use Plexikon\Kernel\Model\Customer\Value\BcryptEncodedPassword;
-use Plexikon\Kernel\Model\Customer\Value\ClearPassword;
-use Plexikon\Kernel\Model\Customer\Value\ClearPasswordConfirmation;
+use Plexikon\Kernel\Model\Account\Service\CredentialEncoder;
+use Plexikon\Kernel\Model\Account\Value\BcryptEncodedPassword;
+use Plexikon\Kernel\Model\Account\Value\ClearPassword;
+use Plexikon\Kernel\Model\Account\Value\ClearPasswordConfirmation;
 use function get_class;
 
 final class BcryptPasswordEncoder implements CredentialEncoder
