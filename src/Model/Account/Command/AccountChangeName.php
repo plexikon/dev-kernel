@@ -24,6 +24,6 @@ final class AccountChangeName extends Command
 
     public function newName(): Name
     {
-        return Name::fromString($this->payload[' new_name']);
+        return Name::fromString($this->payload['new_name']);
     }
 }

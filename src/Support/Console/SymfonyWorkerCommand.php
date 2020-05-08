@@ -31,7 +31,7 @@ class SymfonyWorkerCommand extends Command
         foreach ($this->readModels as $streamName => $command) {
             $this->processes->put(
                 $streamName,
-                Process::fromShellCommandline("php artisan app:$command", null, null, null, 0)
+                Process::fromShellCommandline("php artisan kernel:$command", null, null, null, 0)
             );
         }
 
