@@ -26,6 +26,6 @@ final class AccountReadModel extends ConnectionReadModel
 
     protected function tableName(): string
     {
-        return Table::CUSTOMER;
+        return Table::ACCOUNT;
     }
 }

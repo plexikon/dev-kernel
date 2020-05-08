@@ -25,15 +25,15 @@ final class AccountChangePasswordHandler
     {
         $accountId = $command->accountId();
 
-        if (!$acccount = $this->accountCollection->get($accountId)) {
+        if (!$account = $this->accountCollection->get($accountId)) {
             throw AccountNotFound::withId($accountId);
         }
 
-        $encodedPassword = $this->encodeValidatedPassword($command, $acccount->getPassword());
+        $encodedPassword = $this->encodeValidatedPassword($command, $account->getPassword());
 
-        $acccount->changePassword($encodedPassword);
+        $account->changePassword($encodedPassword);
 
-        $this->accountCollection->store($acccount);
+        $this->accountCollection->store($account);
     }
 
     private function encodeValidatedPassword(AccountChangePassword $command, BcryptEncodedPassword $password): BcryptEncodedPassword

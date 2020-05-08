@@ -4,5 +4,5 @@ namespace Plexikon\Kernel\Projection;
 
 interface Table
 {
-    public const CUSTOMER = 'read_account';
+    public const ACCOUNT = 'read_account';
 }

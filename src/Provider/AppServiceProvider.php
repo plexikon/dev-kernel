@@ -19,7 +19,7 @@ use Plexikon\Reporter\QueryPublisher;
 
 class AppServiceProvider extends ServiceProvider
 {
-    protected string $defaultPersistence = 'pgsql';
+    public const DEFAULT_PERSISTENCE = 'pgsql';
 
     public function register()
     {
@@ -29,28 +29,28 @@ class AppServiceProvider extends ServiceProvider
 
         $this->registerDefaultPublishers();
 
-        $this->app->singleton(Chronicle::class, function (Application $app): Chronicle {
-            return $app->get(ChronicleStoreManager::class)->createChronicleStore($this->defaultPersistence);
-        });
+        $this->app->bindIf(Chronicle::class, function (Application $app): Chronicle {
+            return $app->get(ChronicleStoreManager::class)->createChronicleStore(self::DEFAULT_PERSISTENCE);
+        }, true);
 
-        $this->app->singleton(ProjectorManager::class, function (Application $app): ProjectorManager {
+        $this->app->bindIf(ProjectorManager::class, function (Application $app): ProjectorManager {
             return $app->get(ProjectorServiceManager::class)->createProjectorManager();
-        });
+        }, true);
     }
 
     private function registerDefaultPublishers(): void
     {
-        $this->app->singleton(CommandPublisher::class, function (Application $app): Publisher {
+        $this->app->bindIf(CommandPublisher::class, function (Application $app): Publisher {
             return $app->get(ReporterDriverManager::class)->commandPublisher();
-        });
+        }, true);
 
-        $this->app->singleton(QueryPublisher::class, function (Application $app): Publisher {
+        $this->app->bindIf(QueryPublisher::class, function (Application $app): Publisher {
             return $app->get(ReporterDriverManager::class)->queryPublisher();
         });
 
-        $this->app->singleton(EventPublisher::class, function (Application $app): Publisher {
+        $this->app->bindIf(EventPublisher::class, function (Application $app): Publisher {
             return $app->get(ReporterDriverManager::class)->eventPublisher();
-        });
+        }, true);
     }
 
     public function boot()

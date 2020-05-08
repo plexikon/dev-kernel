@@ -13,7 +13,7 @@ use Plexikon\Kernel\Projection\Table;
 
 class AccountModel extends Model
 {
-    protected $table = Table::CUSTOMER;
+    protected $table = Table::ACCOUNT;
     protected $guarded = ['*'];
     protected $hidden = ['password'];
     protected $keyType = 'string';

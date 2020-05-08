@@ -77,7 +77,7 @@ class AccountServiceProvider extends ServiceProvider implements DeferrableProvid
         $this->app->bindIf(SnapshotStore::class, function (Application $app): SnapshotStore {
             return $app
                 ->get(ChronicleSnapshotManager::class)
-                ->createSnapshotStore('pgsql');
+                ->createSnapshotStore(AppServiceProvider::DEFAULT_PERSISTENCE);
         }, true);
     }
 
