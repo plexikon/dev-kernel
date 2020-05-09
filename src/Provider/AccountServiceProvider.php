@@ -28,7 +28,7 @@ use Plexikon\Kernel\Projection\Stream;
 use Plexikon\Kernel\Support\Console\AccountReadModelProjection;
 use Plexikon\Kernel\Support\Console\AccountSnapshotProjection;
 use Plexikon\Kernel\Support\Console\AccountsQueryProjection;
-use Plexikon\Kernel\Support\Console\SymfonyWorkerCommand;
+use Plexikon\Kernel\Support\Console\ProjectionWorkerCommand;
 
 class AccountServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -61,7 +61,7 @@ class AccountServiceProvider extends ServiceProvider implements DeferrableProvid
         AccountReadModelProjection::class,
         AccountSnapshotProjection::class,
         AccountsQueryProjection::class,
-        SymfonyWorkerCommand::class,
+        ProjectionWorkerCommand::class,
     ];
 
     public function register(): void

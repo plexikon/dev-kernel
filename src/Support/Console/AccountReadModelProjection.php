@@ -35,7 +35,13 @@ class AccountReadModelProjection extends Command
 
     public function handle(): void
     {
+        pcntl_async_signals(true);
+
         $projection = $this->projectorManager->createReadModelProjection(Stream::ACCOUNT, $this->readModel);
+
+        pcntl_signal(SIGINT, function () use ($projection) {
+            $projection->stop();
+        });
 
         $projection
             ->withQueryFilter($this->projectorManager->projectionQueryFilter())
