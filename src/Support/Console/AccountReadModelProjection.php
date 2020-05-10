@@ -55,10 +55,7 @@ class AccountReadModelProjection extends Command
     {
         return [
             'account-registered' =>
-                function (array $state, Message $message): array {
-                    /** @var AccountRegistered $event */
-                    $event = $message->event();
-
+                function (array $state, AccountRegistered $event): array {
                     $this->readModel()->stack('insert', [
                         'id' => $event->aggregateRootId(),
                         'email' => $event->email()->getValue(),
@@ -72,45 +69,34 @@ class AccountReadModelProjection extends Command
                 },
 
             'account-email-changed' =>
-                function (array $state, Message $message): void {
-                    /** @var AccountEmailChanged $event */
-                    $event = $message->event();
-
+                function (array $state, AccountEmailChanged $event): void {
                     $this->readModel()->stack('update', $event->aggregateRootId(), [
                         'email' => $event->newEmail()->getValue()
                     ]);
                 },
 
-            'account-name-changed' => function (array $state, Message $message): void {
-                /** @var AccountNameChanged $event */
-                $event = $message->event();
+            'account-name-changed' => function (array $state, AccountNameChanged $event): void {
                 $this->readModel()->stack('update', $event->aggregateRootId(), [
                     'name' => $event->newName()->getValue()
                 ]);
             },
 
             'account-password-changed' =>
-                function (array $state, Message $message): void {
-                    /** @var AccountPasswordChanged $event */
-                    $event = $message->event();
+                function (array $state, AccountPasswordChanged $event): void {
                     $this->readModel()->stack('update', $event->aggregateRootId(), [
                         'password' => $event->newPassword()->getValue()
                     ]);
                 },
 
             'account-enabled' =>
-                function (array $state, Message $message): void {
-                    /** @var AccountEnabled $event */
-                    $event = $message->event();
+                function (array $state, AccountEnabled $event): void {
                     $this->readModel()->stack('update', $event->aggregateRootId(), [
                         'status' => $event->newStatus()->getValue()
                     ]);
                 },
 
             'account-disabled' =>
-                function (array $state, Message $message): void {
-                    /** @var AccountDisabled $event */
-                    $event = $message->event();
+                function (array $state, AccountDisabled $event): void {
                     $this->readModel()->stack('update', $event->aggregateRootId(), [
                         'status' => $event->newStatus()->getValue()
                     ]);

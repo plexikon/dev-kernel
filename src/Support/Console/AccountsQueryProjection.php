@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Plexikon\Kernel\Support\Console;
 
 use Illuminate\Console\Command;
+use Plexikon\Chronicle\Aggregate\AggregateChanged;
 use Plexikon\Chronicle\Support\Contracts\Projector\ProjectorManager;
 use Plexikon\Kernel\Model\Account\Command\RegisterAccount;
 use Plexikon\Kernel\Projection\Stream;
@@ -28,9 +29,7 @@ class AccountsQueryProjection extends Command
             ->withQueryFilter($this->projectorManager->projectionQueryFilter())
             ->initialize(fn() => ['registered' => 0])
             ->fromStreams(Stream::ACCOUNT)
-            ->whenAny(function (array $state, Message $message): array {
-                $event = $message->event();
-
+            ->whenAny(function (array $state, AggregateChanged $event): array {
                 if ($event instanceof RegisterAccount) {
                     $state['registered']++;
 
