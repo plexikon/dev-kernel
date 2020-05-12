@@ -67,7 +67,7 @@ class ProjectionWorkerCommand extends Command
 
                 if ($round === 0) {
                     $this->error('Unable to stop gracefully ' . $streamName);
-                    $idleStatus = ProjectionStatus::IDLE;
+                    return;
                 }
 
                 $round--;
